@@ -2,10 +2,19 @@
 set -e
 CONNECT_URL=${CONNECT_URL:-http://localhost:8083}
 
-echo "Waiting for Kafka Connect..."
-until curl -sf "$CONNECT_URL/connectors" >/dev/null; do
+echo "Waiting for Kafka Connect at $CONNECT_URL ..."
+MAX_ATTEMPTS=40
+for i in $(seq 1 $MAX_ATTEMPTS); do
+  if curl -sf "$CONNECT_URL/connectors" >/dev/null; then
+    break
+  fi
+  printf '.'
   sleep 3
 done
+if ! curl -sf "$CONNECT_URL/connectors" >/dev/null; then
+  echo "\nKafka Connect did not become ready in time" >&2
+  exit 1
+fi
 
 echo "Registering Debezium connector"
 curl -s -X POST -H "Content-Type: application/json" \
