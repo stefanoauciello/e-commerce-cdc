@@ -23,7 +23,7 @@ curl -s -X POST -H "Content-Type: application/json" \
       "slot.name": "ecommerce_slot",
       "publication.autocreate.mode": "filtered",
       "topic.prefix": "public",
-      "schema.include": "public"
+      "schema.include.list": "public"
     }
   }' \
   "$CONNECT_URL/connectors"
