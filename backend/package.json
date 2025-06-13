@@ -1,0 +1,21 @@
+{
+  "name": "ecommerce-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node --loader ts-node/esm src/index.ts",
+    "test": "jest"
+  },
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "ws": "^8.13.0",
+    "typescript": "^5.2.0",
+    "ts-node": "^10.9.1",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "jest": "^29.6.0",
+    "@types/jest": "^29.5.1",
+    "ts-jest": "^29.1.0"
+  }
+}
