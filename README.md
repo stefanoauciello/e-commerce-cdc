@@ -1,7 +1,7 @@
 # E-commerce CDC Demo
 
 ```
-PostgreSQL 16 --(logical decoding)--> Debezium 2.5 --> Kafka 4.0 (KRaft)
+PostgreSQL 16 --(logical decoding)--> Debezium 3.1 --> Kafka 4.0 (KRaft)
                     ▲                        │
                     │                        ▼
 React dashboard <-- WebSocket -- Node 20 LTS consumer
