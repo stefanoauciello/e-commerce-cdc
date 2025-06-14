@@ -19,8 +19,8 @@ docker compose up -d
 # register connector (once)
 chmod +x db-init/register-debezium.sh
 ./db-init/register-debezium.sh
-# the script waits for Kafka Connect and times out after ~2 minutes
-# check `docker compose logs debezium` if it fails
+# the script waits for Kafka Connect (curl or wget must be available)
+# and times out after ~2 minutes; check `docker compose logs debezium` if it fails
 ```
 
 Place an order using `psql` to watch stock updates live:
