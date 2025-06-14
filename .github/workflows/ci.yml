@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker.io
+          sudo systemctl start docker
+          docker --version
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          elif [ -f package.json ]; then
+            npm install
+          fi
+
+      - name: Run backend tests
+        env:
+          TESTCONTAINERS_RYUK_DISABLED: 'false'
+        run: npm test
