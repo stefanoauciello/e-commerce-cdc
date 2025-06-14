@@ -27,7 +27,7 @@ services:
       - postgres
 
   debezium:
-    image: debezium/connect:3.1
+    image: debezium/connect:2.5.1.Final
     environment:
       BOOTSTRAP_SERVERS: kafka:9092
       GROUP_ID: "1"
