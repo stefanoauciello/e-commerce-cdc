@@ -26,8 +26,10 @@ chmod +x db-init/register-debezium.sh
 Place an order using `psql` to watch stock updates live:
 
 ```sql
-INSERT INTO orders DEFAULT VALUES RETURNING id; -- note the id
-INSERT INTO order_items VALUES (<id>, 1, 2);
+WITH new_order AS (
+INSERT INTO orders DEFAULT VALUES RETURNING id
+    )
+INSERT INTO order_items (order_id, product_id, quantity);
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the dashboard.
