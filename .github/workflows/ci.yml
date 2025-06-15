@@ -14,11 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install Docker
+      - name: Ensure Docker is running
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-          sudo systemctl start docker
           docker --version
 
       - uses: actions/setup-node@v3
