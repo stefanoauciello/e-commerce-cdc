@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 CONNECT_URL=${CONNECT_URL:-http://localhost:8083}
 
