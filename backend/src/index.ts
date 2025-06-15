@@ -8,23 +8,22 @@ dotenv.config();
 const broker = process.env.KAFKA_BROKER ?? 'localhost:9092';
 const kafka = new Kafka({ brokers: [broker] });
 const consumer = kafka.consumer({ groupId: 'dashboard' });
-const topic = 'public.orders';
 const admin = kafka.admin();
+const topic = 'public.orders';
 
+// Object to store stock quantities
 const stock: Record<string, number> = {};
 
-const server = http.createServer((req, res) => {
-  if (req.url === '/health') {
-    res.writeHead(200);
-    res.end('ok');
-    return;
-  }
+// Basic HTTP server (used only to bind WebSocket)
+const server = http.createServer((_req, res) => {
   res.writeHead(404);
   res.end();
 });
 
+// WebSocket server attached to the HTTP server
 const wss = new WebSocketServer({ server });
 
+// Send updated stock to all connected WebSocket clients
 function broadcast() {
   const data = JSON.stringify(stock);
   for (const client of wss.clients) {
@@ -34,19 +33,25 @@ function broadcast() {
   }
 }
 
+// Ensure the Kafka topic exists; create it if not
 async function ensureTopic() {
   await admin.connect();
   const topics = await admin.listTopics();
   if (!topics.includes(topic)) {
+    console.log(`Topic "${topic}" not found, creating...`);
     await admin.createTopics({
       topics: [{ topic }],
       waitForLeaders: true,
     });
+    console.log(`Topic "${topic}" created.`);
+  } else {
+    console.log(`Topic "${topic}" already exists.`);
   }
   await admin.disconnect();
 }
 
-async function main() {
+// Set up the Kafka consumer
+async function startKafkaConsumer() {
   await ensureTopic();
   await consumer.connect();
   await consumer.subscribe({ topic, fromBeginning: true });
@@ -55,27 +60,32 @@ async function main() {
     eachMessage: async ({ message }: any) => {
       const value = message.value?.toString();
       if (!value) return;
-      console.log(value);
+
       try {
         const event = JSON.parse(value);
         const after = event.after ?? {};
         const productId = after.product_id;
         const qty = after.quantity ?? 0;
+
         if (productId) {
           stock[productId] = (stock[productId] || 0) - qty;
           broadcast();
         }
       } catch (err) {
-        console.error('Failed to parse message', err);
+        console.error('Error parsing Kafka message:', err);
       }
     }
   });
-  server.listen(4000, () => {
-    console.log('WebSocket server running on port 4000');
-  });
+
+  console.log(`Kafka consumer started and listening on topic "${topic}".`);
 }
 
-main().catch((err) => {
-  console.error('Fatal error:', err);
-  process.exit(1);
+// Start the HTTP/WebSocket server
+server.listen(4000, () => {
+  console.log('HTTP/WS server listening on port 4000');
+});
+
+// Start the Kafka consumer and handle errors
+startKafkaConsumer().catch((err) => {
+  console.error('Error during Kafka consumer initialization:', err);
 });
