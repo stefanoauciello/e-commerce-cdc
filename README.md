@@ -122,7 +122,7 @@ React dashboard via WebSockets.
 
 1. **Connect to PostgreSQL Database**
    ```
-   docker exec -it postgres psql -U postgres -d ecommerce
+   docker exec -it postgres psql -U myuser -d mydb
    ```
 
 2. **Insert a New Order**
