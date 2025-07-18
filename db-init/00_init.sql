@@ -17,6 +17,6 @@ CREATE TABLE IF NOT EXISTS order_items (
     quantity INT NOT NULL
 );
 
-INSERT INTO products (name, stock) VALUES
-    ('Gadget', 10),
-    ('Widget', 5);
+INSERT INTO products (id, name, stock) VALUES
+    (1,'Gadget', 10),
+    (2,'Widget', 5);

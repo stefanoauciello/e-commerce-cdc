@@ -127,12 +127,15 @@ services:
     ports:
       - "3000:80"
     environment:
-      REACT_APP_API_URL: http://backend:4000
+      VITE_API_URL: http://backend:4000
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:80 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
+    depends_on:
+      backend:
+        condition: service_started
     restart: unless-stopped
 
 volumes:

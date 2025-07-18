@@ -40,7 +40,11 @@ http_post '{
     "database.server.name": "ecommerce",
     "slot.name": "ecommerce_slot",
     "publication.autocreate.mode": "filtered",
-    "topic.prefix": "public",
-    "schema.include.list": "public"
+    "table.include.list": "public.products,public.orders,public.order_items",
+    "topic.prefix": "ecommerce",
+    "schema.include.list": "public",
+    "topic.creation.default.replication.factor": 1,
+    "topic.creation.default.partitions": 1,
+    "topic.creation.default.cleanup.policy": "delete"
   }
 }'
