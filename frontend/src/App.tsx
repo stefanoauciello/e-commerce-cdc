@@ -12,6 +12,19 @@ interface KafkaMessage {
 
 export default function App() {
   const [messages, setMessages] = useState<KafkaMessage[]>([]);
+  const [expanded, setExpanded] = useState<Set<number>>(new Set());
+
+  function toggle(idx: number) {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(idx)) {
+        next.delete(idx);
+      } else {
+        next.add(idx);
+      }
+      return next;
+    });
+  }
 
   useEffect(() => {
     // Get the API URL from environment variables or use a fallback
@@ -60,23 +73,30 @@ export default function App() {
         {messages.length === 0 ? (
           <p>Waiting for events... Try placing an order in the database.</p>
         ) : (
-          messages.map((msg, idx) => (
-            <motion.div
-              key={idx}
-              className="message-card"
-              initial={{ y: 20, scale: 0.95, opacity: 0 }}
-              animate={{ y: 0, scale: 1, opacity: 1 }}
-              transition={{ duration: 0.4, type: 'spring', stiffness: 120 }}
-            >
-              <div className="message-header">
-                <span className="topic-badge">{msg.topic}</span>
-                <span className="timestamp">{new Date(msg.timestamp).toLocaleTimeString()}</span>
-              </div>
-              <div className="message-body">
-                <pre>{JSON.stringify(msg, null, 2)}</pre>
-              </div>
-            </motion.div>
-          ))
+          messages.map((msg, idx) => {
+            const formatted = JSON.stringify(msg, null, 2);
+            const lines = formatted.split('\n');
+            const preview = lines.slice(0, 3).join('\n');
+            const isExpanded = expanded.has(idx);
+            return (
+              <motion.div
+                key={idx}
+                className="message-card"
+                initial={{ y: 20, scale: 0.95, opacity: 0 }}
+                animate={{ y: 0, scale: 1, opacity: 1 }}
+                transition={{ duration: 0.4, type: 'spring', stiffness: 120 }}
+              >
+                <div className="message-header">
+                  <span className="counter">{idx + 1}</span>
+                  <span className="topic-badge">{msg.topic}</span>
+                  <span className="timestamp">{new Date(msg.timestamp).toLocaleTimeString()}</span>
+                </div>
+                <div className="message-body" onClick={() => toggle(idx)}>
+                  <pre>{isExpanded ? formatted : preview + (lines.length > 3 ? '\n...' : '')}</pre>
+                </div>
+              </motion.div>
+            );
+          })
         )}
       </div>
     </div>
