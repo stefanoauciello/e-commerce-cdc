@@ -19,7 +19,10 @@ const consumer = kafka.consumer({ groupId: 'dashboard' });
 const admin = kafka.admin();
 
 // Subscribe to both orders and products topics to capture all relevant events
-const topics = ['ecommerce.public.orders', 'ecommerce.public.products', 'ecommerce.public.order_items'];
+// Include both the expected topic names with 'ecommerce.' prefix and without it
+const topics = [
+  'ecommerce.public.orders', 'ecommerce.public.products', 'ecommerce.public.order_items'
+];
 
 // Basic HTTP server (used only to bind WebSocket)
 const server = http.createServer((_req, res) => {
