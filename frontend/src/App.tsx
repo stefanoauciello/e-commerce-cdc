@@ -64,9 +64,9 @@ export default function App() {
             <motion.div
               key={idx}
               className="message-card"
-              animate={{ scale: 1, opacity: 1 }}
-              initial={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              initial={{ y: 20, scale: 0.95, opacity: 0 }}
+              animate={{ y: 0, scale: 1, opacity: 1 }}
+              transition={{ duration: 0.4, type: 'spring', stiffness: 120 }}
             >
               <div className="message-header">
                 <span className="topic-badge">{msg.topic}</span>
