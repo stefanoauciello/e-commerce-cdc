@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import WebSocket from 'isomorphic-ws';
 import { motion } from 'framer-motion';
+import './App.css';
 
 // Define types for our messages
 interface KafkaMessage {
