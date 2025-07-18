@@ -68,10 +68,19 @@ p {
   font-size: 0.8rem;
 }
 
+.counter {
+  background: #ffa41b;
+  color: #000;
+  padding: 0 0.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
 .message-body {
   background: rgba(0, 0, 0, 0.4);
   padding: 1rem;
   overflow-x: auto;
   font-family: monospace;
   color: #fff;
+  cursor: pointer;
 }
